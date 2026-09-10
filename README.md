@@ -1,4 +1,5 @@
 # sentinai
+![tests](https://github.com/5h4d0wn1k/sentinai/actions/workflows/ci.yml/badge.svg) ![MIT](https://img.shields.io/badge/license-MIT-blue.svg)
 
 Agentic AI blue-team detection & response orchestration (SOC copilot).
 
@@ -183,3 +184,6 @@ and time-to-contain. See the file for the as-measured numbers.
   `python3 -m unittest discover -s tests` green (currently 81 tests).
 - Legal + safety gates (SECURITY.md, CONTRIBUTING.md, CODE_OF_CONDUCT.md,
   AUTHORS, LICENSE) apply to all contributions.
+
+## Contributing
+See [CONTRIBUTING.md](CONTRIBUTING.md).
