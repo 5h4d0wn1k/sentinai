@@ -1,0 +1,3 @@
+{"ts":"2026-09-05T03:19:40Z","host":"edge1.lab.local","rule":"NETSENTINEL_C2_BEACON","src":"198.51.100.7","severity":3,"msg":"repeated outbound beacons to 198.51.100.7"}
+{"ts":"2026-09-05T03:20:00Z","host":"web1.lab.local","rule":"NETSENTINEL_IDS_SQLI","src":"198.51.100.7","severity":3,"msg":"sqli pattern in /login"}
+{"ts":"2026-09-05T08:40:12Z","host":"web1.lab.local","rule":"NETSENTINEL_IDS_SCAN","src":"203.0.113.5","severity":2,"msg":"port scan observed against web1"}

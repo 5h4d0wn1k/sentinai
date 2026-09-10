@@ -1,0 +1,6 @@
+PID PPID USER STAT START COMMAND
+1121 1 root S 03:10:02 /usr/lib/systemd/systemd --user
+1984 1121 alice S 03:18:11 /usr/bin/python3.9 /opt/lab/app/server.py
+3127 1 root S 03:18:11 /tmp/xmrig -o 198.51.100.7:8444
+3128 1 debian S 03:18:11 /bin/bash /dev/shm/.cache/kdevtmpfsi
+1010 1 root S 08:00:15 /usr/sbin/sshd -D
