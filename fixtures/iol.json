@@ -1,0 +1,13 @@
+{
+  "brute_force": {"tactic": "Initial Access", "techniques": ["T1110", "T1078"]},
+  "root_login": {"tactic": "Initial Access", "techniques": ["T1078"]},
+  "web_sqli": {"tactic": "Initial Access", "techniques": ["T1190"]},
+  "web_xss": {"tactic": "Execution", "techniques": ["T1059"]},
+  "proc_suspicious": {"tactic": "Execution", "techniques": ["T1059"]},
+  "proc_unusual_path": {"tactic": "Persistence", "techniques": ["T1036"]},
+  "flow_beacon": {"tactic": "Command and Control", "techniques": ["T1071.001"]},
+  "flow_scan": {"tactic": "Discovery", "techniques": ["T1046"]},
+  "alert_NETSENTINEL_C2_BEACON": {"tactic": "Command and Control", "techniques": ["T1071.001"]},
+  "alert_NETSENTINEL_IDS_SQLI": {"tactic": "Initial Access", "techniques": ["T1190"]},
+  "alert_NETSENTINEL_IDS_SCAN": {"tactic": "Discovery", "techniques": ["T1046"]}
+}
