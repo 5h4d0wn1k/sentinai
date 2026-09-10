@@ -92,9 +92,10 @@ class Responder:
     # ---- single-action entrypoint ----------------------------------------
     def run(self, action: str, target: str,
             incident_id: str = "", approval_mode: Optional[str] = None,
-            preapproved: bool = False) -> RespondAction:
+            preapproved: bool = False, asof: Optional[float] = None) -> RespondAction:
         if approval_mode:
             self.gate = ApprovalGate(approval_mode, preapproved)
+        self._now = asof if asof is not None else time.time()
         spec = ACTION_SPECS.get(action)
         if not spec:
             raise ValueError(f"unknown action {action!r}; choose from {sorted(ACTION_SPECS)}")
@@ -109,12 +110,15 @@ class Responder:
             return self._snapshot(action, target, spec, incident_id)
         raise ValueError(f"unhandled action {action!r}")
 
+    def _ts(self) -> float:
+        return getattr(self, "_now", time.time())
+
     # ---- executors --------------------------------------------------------
     def _block_src(self, action: str, target: str, spec: Dict[str, Any],
                    incident_id: str) -> RespondAction:
         tgt = classify_target(target, self.cfg)
         approved, why = self.gate.decide(action, target, tgt.kind)
-        base_ts = time.time()
+        base_ts = self._ts()
         if tgt.kind == "refused":
             return self._record(action, target, mode="refused", status="hard_refused",
                                 ts=base_ts, approval=self.gate.mode,
@@ -140,30 +144,30 @@ class Responder:
         tgt = Target(secret, "lab", "fixture secret (lab sim)", can_ack=False)
         if secret not in self.cfg["lab"]["secrets"]:
             return self._record(action, secret, mode="refused", status="hard_refused",
-                                ts=time.time(), approval=self.gate.mode,
+                                ts=self._ts(), approval=self.gate.mode,
                                 detail="secret not in lab allowlist")
         approved, why = self.gate.decide(action, secret, tgt.kind)
         if not approved:
             return self._record(action, secret, mode="denied", status="denied",
-                                ts=time.time(), approval=self.gate.mode, detail=why)
+                                ts=self._ts(), approval=self.gate.mode, detail=why)
         ok, detail, gen = self.lab.rotate_secret(secret)
         return self._record(action, secret, mode="simulated" if ok else "failed",
-                            status="executed" if ok else "failed", ts=time.time(),
+                            status="executed" if ok else "failed", ts=self._ts(),
                             approval=self.gate.mode, detail=detail)
 
     def _disable_user(self, action: str, user: str, spec: Dict[str, Any]) -> RespondAction:
         tgt = Target(user, "lab", "fixture user (lab sim)", can_ack=False)
         if not valid_fixture_user(user, self.cfg):
             return self._record(action, user, mode="refused", status="hard_refused",
-                                ts=time.time(), approval=self.gate.mode,
+                                ts=self._ts(), approval=self.gate.mode,
                                 detail="user not in lab fixture allowlist")
         approved, why = self.gate.decide(action, user, tgt.kind)
         if not approved:
             return self._record(action, user, mode="denied", status="denied",
-                                ts=time.time(), approval=self.gate.mode, detail=why)
+                                ts=self._ts(), approval=self.gate.mode, detail=why)
         detail = f"fixture sim: account {user} disabled (login disabled)"
         return self._record(action, user, mode="simulated", status="executed",
-                            ts=time.time(), approval=self.gate.mode, detail=detail)
+                            ts=self._ts(), approval=self.gate.mode, detail=detail)
 
     def _snapshot(self, action: str, path: str, spec: Dict[str, Any],
                   incident_id: str) -> RespondAction:
@@ -173,18 +177,18 @@ class Responder:
         src_abspath = os.path.abspath(path)
         if not src_abspath.startswith(fixtures_root):
             return self._record(action, path, mode="refused", status="hard_refused",
-                                ts=time.time(), approval=self.gate.mode,
+                                ts=self._ts(), approval=self.gate.mode,
                                 detail="snapshot source outside fixtures/ (hard refusal)",
                                 incident_id=incident_id)
         tgt = Target(path, "lab", "fixture artifact (read-only source)", can_ack=False)
         approved, why = self.gate.decide(action, path, tgt.kind)
         if not approved:
             return self._record(action, path, mode="denied", status="denied",
-                                ts=time.time(), approval=self.gate.mode, detail=why)
+                                ts=self._ts(), approval=self.gate.mode, detail=why)
         incident_dir = os.path.join(self.store.root, "evidence", incident_id or "adhoc")
         ok, detail = self.lab.snapshot(path, incident_dir)
         mode = "executed" if ok else "failed"
-        act = self._record(action, path, mode=mode, status=mode, ts=time.time(),
+        act = self._record(action, path, mode=mode, status=mode, ts=self._ts(),
                            approval=self.gate.mode, detail=detail, incident_id=incident_id)
         if ok:
             inc = self.store.get_incident(incident_id) if incident_id else None

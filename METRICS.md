@@ -38,10 +38,12 @@ findings — the planted brute force is flagged exactly, nothing else.
 | kill-chain stages | 3 (Initial Access -> Execution -> Command and Control) |
 | containment | CONTAINED (block-src auto-approve, RFC 5737 simulation recorded) |
 | agent iterations / budget | 12 / 20 |
+| time-to-contain (detection -> block, simulated) | ~440 s (~7.3 min) |
+| findings attributed to incident #1 | 7 |
 | response actions | block-src x1, disable-user x2, rotate-fixture-secret x1, snapshot-artifact x5 |
-| IOC list entries | >= 4 (actor address × signals) |
+| IOC list entries | 6 |
 | remediation checklist items | 9 |
-| lessons learned | >= 4 |
+| lessons learned | 7 |
 
 ## Watch mode (`sentinai watch --budget 30 --interval 1800`)
 

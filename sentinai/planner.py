@@ -205,9 +205,10 @@ class Agent:
                 notes.append(f"[agent] iteration budget {budget} exhausted; stopping.")
                 break
             if step.action and incident:
+                now = incident.ts_end + iters * 0.5  # inside the simulated timeline
                 act = self.responder.run(action=step.action, target=step.target,
                                          incident_id=incident.id,
-                                         approval_mode=approval)
+                                         approval_mode=approval, asof=now)
                 notes.append(f"[agent] {step.action} {step.target} -> {act.status} "
                              f"({act.mode})")
                 if step.action == "block-src" and act.status in ("executed", "simulated"):
