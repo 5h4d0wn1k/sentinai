@@ -1,0 +1,23 @@
+#!/bin/sh
+# sentinai lab iptables stub — ACKs a block rule and records it into the own
+# lab state dir. Simulation surface only: nothing real is ever firewalled.
+set -eu
+STATE_DIR="${LAB_STATE_DIR:-lab/state}"
+mkdir -p "$STATE_DIR"
+### build the rule from argv, e.g.: iptables -I INPUT -s 127.0.0.2 -j DROP
+rule="-A INPUT"
+chain="INPUT"
+prev=""
+for arg in "$@"; do
+  case "$arg" in
+    -s|-d) ;;
+    INPUT|OUTPUT|FORWARD) chain="$arg" ;;
+    -j) ;;
+    DROP|REJECT|ACCEPT) action="$arg" ;;
+    *) prev="$arg";;
+  esac
+  [ -n "${prev:-}" ] && rule="$rule $prev" && prev=""
+done
+[ -n "${action:-}" ] && rule="$rule -j $action"
+printf '%s\n' "$rule" >> "$STATE_DIR/iptables.rules"
+echo "ACK: recorded rule [$rule] (lab stub, no real network touched)"

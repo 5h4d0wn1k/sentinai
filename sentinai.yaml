@@ -1,0 +1,67 @@
+# sentinai default config (used when no --config is given; JSON equally supported)
+window:
+  correlate: 1800.0
+  ssh: 600.0
+  beacon: 600.0
+  scan: 120.0
+
+thresholds:
+  ssh_failed_min: 5
+  web_sqli: true
+  web_xss: true
+  beacons_min: 4
+  beacon_regularity: 0.5
+  beacon_bytes_min: 2000
+  scan_min_ports: 5
+  after_hours: true
+
+assets:
+  db1.lab.local: 5
+  web1.lab.local: 4
+  edge1.lab.local: 3
+  workstation-alice.lab.local: 2
+  mail1.lab.local: 3
+
+asset_default: 2
+
+stage_weights:
+  Initial Access: 1.0
+  Execution: 1.2
+  Persistence: 1.4
+  Privilege Escalation: 1.6
+  Defense Evasion: 1.5
+  Credential Access: 1.8
+  Discovery: 1.4
+  Lateral Movement: 1.7
+  Collection: 1.6
+  Command and Control: 2.0
+  Exfiltration: 2.0
+  Impact: 2.0
+  Reconnaissance: 0.8
+  Resource Development: 0.8
+
+correlate:
+  min_channels: 2
+
+approval:
+  mode: ask
+
+planner:
+  default: rule
+  budget: 20
+
+watch:
+  interval: 1.0
+  budget: 200
+  batch: 8
+
+paths:
+  report_root: reports
+  lab_root: lab
+  lab_iptables: lab/scripts/iptables
+  lab_state: lab/state
+
+lab:
+  allow_loopback: true
+  allow_rfc5737: true
+  users: [root, alice, bob, admin, operator]

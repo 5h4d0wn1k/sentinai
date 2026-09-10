@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentinai"
+version = "1.0.0"
+description = "Agentic AI blue-team detection & response orchestration (SOC copilot)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "5h4d0wn1k", email = "5h4d0wn1k@users.noreply.github.com" },
+]
+keywords = ["security", "soc", "blue-team", "incident-response", "detection", "agent"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: System :: Networking :: Monitoring",
+]
+
+[project.scripts]
+sentinai = "sentinai.cli:main"
+
+[tool.setuptools]
+packages = ["sentinai"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+sentinai = []

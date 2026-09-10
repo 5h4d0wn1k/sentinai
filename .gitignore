@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 reports/
+lab/state/
 captures/
 *.pcap
 *.pcapng
